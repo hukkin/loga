@@ -8,7 +8,7 @@ jobs:
     - python: '3.9-dev'
 install:
   - pip install "poetry==1.0.10"
-  - poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
+  - poetry config virtualenvs.create false && poetry install --extras graylog --no-interaction --no-ansi
 script:
   # Static checks (only in Python 3.8 job)
   - |
