@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hukkinj1/loga.svg?branch=master)](https://travis-ci.org/hukkinj1/loga)
+[![Build Status](https://travis-ci.com/hukkinj1/loga.svg?branch=master)](https://travis-ci.com/hukkinj1/loga)
 [![codecov.io](https://codecov.io/gh/hukkinj1/loga/branch/master/graph/badge.svg)](https://codecov.io/gh/hukkinj1/loga)
 [![PyPI version](https://badge.fury.io/py/loga.svg)](https://badge.fury.io/py/loga)
 
