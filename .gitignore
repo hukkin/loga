@@ -103,11 +103,11 @@ ENV/
 
 # mypy
 .mypy_cache/
-.DS_Store
-loggo/config.py
-loggo/logs/log.txt
-tests/logs/
 
 # JetBrains IDEs
 .idea/
+
+# loga specific
 logs/
+loga/logs/log.txt
+tests/logs/

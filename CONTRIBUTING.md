@@ -43,7 +43,7 @@ Issues, feature requests and code contributions are welcomed. Follow these steps
 
 ## Version bumping
 
-`loggo` adheres to semantic versioning, ideally via the `bump2version` utility. Install it with pip:
+`loga` adheres to semantic versioning, ideally via the `bump2version` utility. Install it with pip:
 
 ```bash
 pip install bump2version

@@ -6,7 +6,7 @@ from unittest.mock import ANY, Mock, call, mock_open, patch
 
 import pytest
 
-from loggo import Loggo
+from loga import Loga
 
 test_setup: Mapping[str, Any] = {
     "do_write": True,
@@ -14,21 +14,21 @@ test_setup: Mapping[str, Any] = {
     "private_data": {"mnemonic", "priv"},
 }
 
-loggo = Loggo(**test_setup)
+loga = Loga(**test_setup)
 
 
-@loggo
+@loga
 def function_with_private_arg(priv, acceptable=True):
     return acceptable
 
 
-@loggo
+@loga
 def function_with_private_kwarg(number, a_float=0.0, mnemonic=None):
     return number * a_float
 
 
-# we can also use loggo.__call__
-@loggo
+# we can also use loga.__call__
+@loga
 def may_or_may_not_error_test(first, other, kwargs=None):
     """A function that may or may not error."""
     if not kwargs:
@@ -37,12 +37,12 @@ def may_or_may_not_error_test(first, other, kwargs=None):
         return (first + other, kwargs)
 
 
-@loggo
+@loga
 def aaa():
     return "this"
 
 
-@loggo
+@loga
 class AllMethodTypes:
     def __secret__(self):
         """a method that should never be logged."""
@@ -62,9 +62,9 @@ class AllMethodTypes:
         """static method."""
         return True
 
-    @loggo
+    @loga
     def doubled(self):
-        """Loggo twice, bad but shouldn't kill."""
+        """Loga twice, bad but shouldn't kill."""
         return True
 
 
@@ -78,7 +78,7 @@ class NoRepr:
         raise Exception("No.")
 
 
-@loggo
+@loga
 class DummyClass:
     """A class with regular methods, static methods and errors."""
 
@@ -101,11 +101,11 @@ class DummyClass:
         if kw:
             raise ValueError("Should not have provided!")
 
-    @loggo.ignore
+    @loga.ignore
     def hopefully_ignored(self, n):
         return n ** n
 
-    @loggo.errors
+    @loga.errors
     def hopefully_only_errors(self, n):
         raise ValueError("Bam!")
 
@@ -115,7 +115,7 @@ class DummyClass2:
         return a + b + c
 
 
-@loggo.errors
+@loga.errors
 class ForErrors:
     def one(self):
         raise ValueError("Boom!")
@@ -124,7 +124,7 @@ class ForErrors:
         return True
 
 
-@loggo.errors
+@loga.errors
 def first_test_func(number):
     raise ValueError("Broken!")
 
@@ -133,12 +133,12 @@ within = {"lst": [], "ok": {"ok": {"priv": "secret"}}}
 beyond = {"lst": [], "ok": {"ok": {"ok": {"ok": {"ok": {"ok": {"priv": "allowed"}}}}}}}
 
 
-@loggo
+@loga
 def func_with_recursive_data_beyond(data):
     pass
 
 
-@loggo
+@loga
 def func_with_recursive_data_within(data):
     pass
 
@@ -233,13 +233,13 @@ class TestDecoration:
                 (alert, logged_msg), extras = logger.call_args_list[-1]
                 assert "Errored with ValueError" in logged_msg, logged_msg
 
-    def test_loggo_ignore(self):
+    def test_loga_ignore(self):
         with patch("logging.Logger.log") as logger:
             result = dummy.hopefully_ignored(5)
             assert result == 5 ** 5
             logger.assert_not_called()
 
-    def test_loggo_errors(self):
+    def test_loga_errors(self):
         with patch("logging.Logger.log") as logger:
             with pytest.raises(ValueError):
                 dummy.hopefully_only_errors(5)
@@ -248,7 +248,7 @@ class TestDecoration:
             assert expected_msg == logged_msg
 
     def test_error_deco(self):
-        """Test that @loggo.errors logs only errors when decorating a class."""
+        """Test that @loga.errors logs only errors when decorating a class."""
         with patch("logging.Logger.log") as logger:
             fe = ForErrors()
             assert fe.two()
@@ -295,13 +295,13 @@ class TestLog:
             "This is": "log data",
             "that can be": "used when content does not matter",
         }
-        self.loggo = Loggo(
+        self.loga = Loga(
             do_print=True,
             do_write=True,
             logfile=self.logfile,
             log_if_graylog_disabled=False,
         )
-        self.log = self.loggo.log
+        self.log = self.loga.log
 
     def test_protected_keys(self):
         """Test that protected log data keys are renamed.
@@ -342,12 +342,12 @@ class TestLog:
     def test_int_truncation(self):
         """Test that large ints in log data are truncated."""
         truncation = 100
-        loggo = Loggo(truncation=truncation)
+        loga = Loga(truncation=truncation)
         msg = "This is simply a test of the int truncation inside the log."
         large_number = 10 ** (truncation + 1)
         log_data = {"key": large_number}
         with patch("logging.Logger.log") as mock_log:
-            loggo.log(logging.INFO, msg, log_data)
+            loga.log(logging.INFO, msg, log_data)
         mock_log.assert_called_with(20, msg, extra=ANY)
         logger_was_passed = mock_log.call_args[1]["extra"]["key"]
         truncation_suffix = "..."
@@ -358,7 +358,7 @@ class TestLog:
         """If something cannot be cast to string, we need to know about it."""
         with patch("logging.Logger.log") as mock_log:
             no_string_rep = NoRepr()
-            result = self.loggo._force_string_and_truncate(no_string_rep, 7500)
+            result = self.loga._force_string_and_truncate(no_string_rep, 7500)
             assert result == "<<Unstringable input>>"
             (alert, msg), kwargs = mock_log.call_args
             assert "Object could not be cast to string" == msg
@@ -368,7 +368,7 @@ class TestLog:
         default_truncation_len = 7500
         truncation_suffix = "..."
         with patch("logging.Logger.log") as mock_log:
-            self.loggo.info("a" * 50000)
+            self.loga.info("a" * 50000)
             mock_log.assert_called_with(
                 logging.INFO,
                 "a" * (default_truncation_len - len(truncation_suffix)) + truncation_suffix,
@@ -378,13 +378,13 @@ class TestLog:
     def test_trace_truncation(self):
         """Test that trace is truncated correctly."""
         trace_truncation = 100
-        loggo = Loggo(trace_truncation=trace_truncation)
+        loga = Loga(trace_truncation=trace_truncation)
         for trace_key in {"trace", "traceback"}:
             msg = "This is simply a test of the int truncation inside the log."
             large_number = 10 ** (trace_truncation + 1)
             log_data = {trace_key: large_number}
             with patch("logging.Logger.log") as mock_log:
-                loggo.log(logging.INFO, msg, log_data)
+                loga.log(logging.INFO, msg, log_data)
             mock_log.assert_called_with(20, msg, extra=ANY)
             logger_was_passed = mock_log.call_args[1]["extra"][trace_key]
             truncation_suffix = "..."
@@ -397,7 +397,7 @@ class TestLog:
         with patch("logging.Logger.log") as mock_log:
             no_string_rep = NoRepr()
             sample = {"fine": 123, "not_fine": no_string_rep}
-            result = self.loggo.sanitise(sample)
+            result = self.loga.sanitise(sample)
             (alert, msg), kwargs = mock_log.call_args
             assert "Object could not be cast to string" == msg
             assert result["not_fine"] == "<<Unstringable input>>"
@@ -407,19 +407,19 @@ class TestLog:
         with patch("logging.Logger.log") as mock_log:
             mock_log.side_effect = Exception("Really dead.")
             with pytest.raises(Exception):
-                self.loggo.log(logging.INFO, "Anything")
+                self.loga.log(logging.INFO, "Anything")
 
-    def test_loggo_pause(self):
+    def test_loga_pause(self):
         with patch("logging.Logger.log") as mock_log:
-            with loggo.pause():
-                loggo.log(logging.INFO, "test")
+            with loga.pause():
+                loga.log(logging.INFO, "test")
             mock_log.assert_not_called()
-            loggo.log(logging.INFO, "test")
+            loga.log(logging.INFO, "test")
             mock_log.assert_called()
 
-    def test_loggo_pause_error(self):
+    def test_loga_pause_error(self):
         with patch("logging.Logger.log") as logger:
-            with loggo.pause():
+            with loga.pause():
                 with pytest.raises(ValueError):
                     may_or_may_not_error_test("one", "two")
             (alert, msg), kwargs = logger.call_args
@@ -434,37 +434,37 @@ class TestLog:
                 may_or_may_not_error_test("one", "two")
                 assert len(logger.call_args_list) == 2
 
-    def test_loggo_error_suppressed(self):
+    def test_loga_error_suppressed(self):
         with patch("logging.Logger.log") as logger:
-            with loggo.pause(allow_errors=False):
+            with loga.pause(allow_errors=False):
                 with pytest.raises(ValueError):
                     may_or_may_not_error_test("one", "two")
             logger.assert_not_called()
-            loggo.log(logging.INFO, "test")
+            loga.log(logging.INFO, "test")
             logger.assert_called_once()
 
     def test_see_below(self):
         """legacy test, deletable if it causes problems later."""
         with patch("logging.Logger.log") as logger:
-            loggo.log(50, "test")
+            loga.log(50, "test")
             (alert, msg), kwargs = logger.call_args
             assert "-- see below:" not in msg
 
     def test_compat(self):
         test = "a string"
-        with patch("loggo.Loggo.log") as logger:
-            loggo.log(logging.INFO, test, None)
+        with patch("loga.Loga.log") as logger:
+            loga.log(logging.INFO, test, None)
         args = logger.call_args
         assert isinstance(args[0][0], int)
         assert args[0][1] == test
         assert args[0][2] is None
         with patch("logging.Logger.log") as logger:
-            loggo.log(logging.INFO, test)
+            loga.log(logging.INFO, test)
         (alert, msg), kwargs = logger.call_args
         assert test == msg
 
     def test_bad_args(self):
-        @loggo
+        @loga
         def dummy(needed):
             return needed
 
@@ -489,43 +489,43 @@ class TestLog:
 
     def test_stop_and_start(self):
         """Check that the start and stop commands actually do something."""
-        loggo.start()
+        loga.start()
         self._working_normally()
-        loggo.stop()
+        loga.stop()
         self._not_logging()
-        loggo.start()
+        loga.start()
         self._working_normally()
 
     def test_debug(self):
-        with patch("loggo.Loggo.log") as logger:
-            self.loggo.debug(self.log_msg, self.log_data)
+        with patch("loga.Loga.log") as logger:
+            self.loga.debug(self.log_msg, self.log_data)
             logger.assert_called_with(logging.DEBUG, self.log_msg, self.log_data)
 
     def test_info(self):
-        with patch("loggo.Loggo.log") as logger:
-            self.loggo.info(self.log_msg, self.log_data)
+        with patch("loga.Loga.log") as logger:
+            self.loga.info(self.log_msg, self.log_data)
             logger.assert_called_with(logging.INFO, self.log_msg, self.log_data)
 
     def test_warning(self):
-        with patch("loggo.Loggo.log") as logger:
-            self.loggo.warning(self.log_msg, self.log_data)
+        with patch("loga.Loga.log") as logger:
+            self.loga.warning(self.log_msg, self.log_data)
             logger.assert_called_with(logging.WARNING, self.log_msg, self.log_data)
 
     def test_error(self):
-        with patch("loggo.Loggo.log") as logger:
-            self.loggo.error(self.log_msg, self.log_data)
+        with patch("loga.Loga.log") as logger:
+            self.loga.error(self.log_msg, self.log_data)
             logger.assert_called_with(logging.ERROR, self.log_msg, self.log_data)
 
     def test_critical(self):
-        with patch("loggo.Loggo.log") as logger:
-            self.loggo.critical(self.log_msg, self.log_data)
+        with patch("loga.Loga.log") as logger:
+            self.loga.critical(self.log_msg, self.log_data)
             logger.assert_called_with(logging.CRITICAL, self.log_msg, self.log_data)
 
     def test_listen_to(self):
-        sub_loggo_facility = "a sub logger"
-        sub_loggo = Loggo(facility=sub_loggo_facility)
-        self.loggo.listen_to(sub_loggo_facility)
-        self.loggo.log = Mock()  # type: ignore
+        sub_loga_facility = "a sub logger"
+        sub_loga = Loga(facility=sub_loga_facility)
+        self.loga.listen_to(sub_loga_facility)
+        self.loga.log = Mock()  # type: ignore
         warn = "The parent logger should log this message after sublogger logs it"
-        sub_loggo.log(logging.WARNING, warn)
-        self.loggo.log.assert_called_with(logging.WARNING, warn, ANY)
+        sub_loga.log(logging.WARNING, warn)
+        self.loga.log.assert_called_with(logging.WARNING, warn, ANY)

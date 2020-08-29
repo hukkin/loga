@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
-from loggo import Loggo
+from loga import Loga
 
-loggo = Loggo(log_if_graylog_disabled=False)
+loga = Loga(log_if_graylog_disabled=False)
 
 
-@loggo
+@loga
 class AllMethodTypes:
     def __secret__(self):
         """a method that should never be logged."""
@@ -25,9 +25,9 @@ class AllMethodTypes:
         """static method."""
         return True
 
-    @loggo
+    @loga
     def doubled(self):
-        """Loggo twice, bad but shouldn't kill."""
+        """Loga twice, bad but shouldn't kill."""
         return True
 
 

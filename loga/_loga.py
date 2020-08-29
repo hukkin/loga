@@ -1,5 +1,5 @@
 """
-@loggo: automated logging for Python
+@loga: automated logging for Python
 """
 
 from contextlib import contextmanager
@@ -46,11 +46,11 @@ DEFAULT_FORMS: Mapping[CallableEvent, str] = {
 }
 
 # Miscellaneous constants
-LOG_LEVEL = logging.DEBUG  # Log level used for Loggo decoration logs
+LOG_LEVEL = logging.DEBUG  # Log level used for loga decoration logs
 LOG_THRESHOLD = logging.DEBUG  # Only log when log level is this or higher
 MAX_DICT_OBSCURATION_DEPTH = 5
 OBSCURED_STRING = "********"
-# Callables with an attribute of this name set to True will not be logged by Loggo
+# Callables with an attribute of this name set to True will not be logged by loga
 NO_LOGS_ATTR_NAME = "_do_not_log_this_callable"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S %Z"
 
@@ -104,7 +104,7 @@ class LocalLogFormatter(logging.Formatter):
         return msg
 
 
-class Loggo:
+class Loga:
     """A class for logging."""
 
     def __init__(
@@ -114,7 +114,7 @@ class Loggo:
         returned: Optional[str] = DEFAULT_FORMS["returned"],
         returned_none: Optional[str] = DEFAULT_FORMS["returned_none"],
         errored: Optional[str] = DEFAULT_FORMS["errored"],
-        facility: str = "loggo",
+        facility: str = "loga",
         graylog_address: Optional[Tuple[str, int]] = None,
         do_print: bool = False,
         do_write: bool = False,
@@ -126,7 +126,7 @@ class Loggo:
         private_data: AbstractSet[str] = frozenset(),
         log_if_graylog_disabled: bool = True,
     ) -> None:
-        """Initializes a Loggo object.
+        """Initializes a Loga object.
 
         On instantiation, pass in a dictionary containing the config.
         Currently accepted config values are:
@@ -176,9 +176,9 @@ class Loggo:
         self._add_graylog_handler(graylog_address, log_if_disabled=log_if_graylog_disabled)
 
     def __call__(self, class_or_func: CallableOrType) -> CallableOrType:
-        """Make Loggo object itself a decorator.
+        """Make Loga object itself a decorator.
 
-        Allow decorating either a class or a method/function, so @loggo
+        Allow decorating either a class or a method/function, so @loga
         can be used on both classes and functions.
         """
         if isinstance(class_or_func, type):
@@ -202,7 +202,7 @@ class Loggo:
         """Resolve the format for a log message, when a function returns None.
 
         If the user has their own msg format for 'returned' logs, but
-        not one for 'returned_none', we should use theirs over loggo's
+        not one for 'returned_none', we should use theirs over loga's
         default.
         """
         # if the user explicitly doesn't want logs for returns, set to none
@@ -251,7 +251,7 @@ class Loggo:
 
     @contextmanager
     def pause(self, allow_errors: bool = True) -> Generator[None, None, None]:
-        """A context manager that prevents loggo from logging in that context.
+        """A context manager that prevents loga from logging in that context.
 
         By default, errors will still make it through, unless
         allow_errors==False
@@ -265,7 +265,7 @@ class Loggo:
             self._allow_errors, self._stopped = original
 
     def stop(self, allow_errors: bool = True) -> None:
-        """Stop loggo from logging.
+        """Stop loga from logging.
 
         By default still log raised exceptions.
         """
@@ -279,9 +279,9 @@ class Loggo:
 
     @staticmethod
     def ignore(function: Callable) -> Callable:
-        """A decorator that will override Loggo class decorator.
+        """A decorator that will override Loga class decorator.
 
-        If a class is decorated with @loggo, logging can still be
+        If a class is decorated with @loga, logging can still be
         disabled for certain methods using this decorator.
         """
         setattr(function, NO_LOGS_ATTR_NAME, True)
@@ -298,7 +298,7 @@ class Loggo:
     def _logme(self, function: Callable, just_errors: bool = False) -> Callable:
         """A decorator for automated input/output logging.
 
-        Used by @loggo and @loggo.errors decorators. Makes a log when a
+        Used by @loga and @loga.errors decorators. Makes a log when a
         callable is called, returns, or raises. If `just_errors` is
         True, only logs when a callable raises.
         """
@@ -385,24 +385,24 @@ class Loggo:
         format_strings["call_signature"] = signature.format(**format_strings)
         return format_strings
 
-    def listen_to(loggo_self, facility: str) -> None:
-        """Listen to logs from another logger and make loggo log them.
+    def listen_to(loga_self, facility: str) -> None:
+        """Listen to logs from another logger and make loga log them.
 
         This method can hook the logger up to anything else that logs
         using the Python logging module (i.e. another logger) and steals
         its logs. This can be useful for instance for logging logs of a
-        library using a shared Loggo configuration.
+        library using a shared Loga configuration.
         """
 
-        class LoggoHandler(logging.Handler):
+        class LogaHandler(logging.Handler):
             def emit(handler_self, record: logging.LogRecord) -> None:
                 extra = {k: v for k, v in vars(record).items() if k not in LOG_RECORD_ATTRS}
                 extra["sublogger"] = facility
-                loggo_self.log(record.levelno, record.msg, extra)
+                loga_self.log(record.levelno, record.msg, extra)
 
         other_logger = logging.getLogger(facility)
         other_logger.setLevel(LOG_THRESHOLD)
-        other_logger.addHandler(LoggoHandler())
+        other_logger.addHandler(LogaHandler())
 
     @staticmethod
     def _params_to_dict(function: Callable, *args: Any, **kwargs: Any) -> Optional[Mapping]:
@@ -481,8 +481,8 @@ class Loggo:
         if self._stopped and where != "errored":
             return
 
-        # do not log loggo, because why would you ever want that?
-        if "loggo.loggo" in formatters["call_signature"]:
+        # do not log loga, because why would you ever want that?
+        if "loga.loga" in formatters["call_signature"]:
             return
 
         # return value for log message
@@ -627,7 +627,7 @@ class Loggo:
 
         msg = self._truncate(msg, self._msg_truncation)
 
-        extra.update({"log_level": str(level), "loggo": "True"})
+        extra.update({"log_level": str(level), "loga": "True"})
 
         try:
             self._logger.log(level, msg, extra=extra)

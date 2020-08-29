@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from loggo import Loggo
+from loga import Loga
 
 strings: Mapping[str, str] = {
     "called": "Log string {call_signature}",
@@ -11,7 +11,7 @@ strings: Mapping[str, str] = {
     "errored": "Log string on exception",
 }
 
-custom_strings = Loggo(log_if_graylog_disabled=False, **strings)
+custom_strings = Loga(log_if_graylog_disabled=False, **strings)
 
 nocalled: Mapping[str, Optional[str]] = {
     "called": None,
@@ -26,9 +26,9 @@ no_return: Mapping[str, Optional[str]] = {
     "returned_none": None,
 }
 
-custom_none_string = Loggo(log_if_graylog_disabled=False, **nocalled)
+custom_none_string = Loga(log_if_graylog_disabled=False, **nocalled)
 
-custom_no_return = Loggo(log_if_graylog_disabled=False, **no_return)
+custom_no_return = Loga(log_if_graylog_disabled=False, **no_return)
 
 
 # custom message test data

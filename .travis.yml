@@ -17,7 +17,7 @@ script:
       mypy . &&
       isort --check-only -rc . &&
       black --check . &&
-      docformatter --recursive --check loggo/ tests/
+      docformatter --recursive --check loga/ tests/
     fi
   # Tests
   - pytest --cov --cov-fail-under=95
