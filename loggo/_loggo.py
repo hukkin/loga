@@ -1,5 +1,5 @@
 """
-Loggo: safe and automatable logging
+@loggo: automated logging for Python
 """
 
 from contextlib import contextmanager
@@ -11,13 +11,20 @@ import pathlib
 import sys
 import time
 import traceback
-from typing import AbstractSet, Any, Callable, Dict, Generator, Mapping, Optional, Tuple, TypeVar
+from typing import (
+    AbstractSet,
+    Any,
+    Callable,
+    Dict,
+    Generator,
+    Literal,
+    Mapping,
+    Optional,
+    Tuple,
+    TypedDict,
+    TypeVar,
+)
 import uuid
-
-if sys.version_info < (3, 8):
-    from typing_extensions import Literal, TypedDict
-else:
-    from typing import Literal, TypedDict
 
 # you don't need graylog installed
 try:
@@ -35,7 +42,7 @@ DEFAULT_FORMS: Mapping[CallableEvent, str] = {
     "called": "*Called {call_signature}",
     "returned": "*Returned from {call_signature} with {return_type} {return_value}",
     "returned_none": "*Returned None from {call_signature}",
-    "errored": '*Errored during {call_signature} with {exception_type} "{exception_msg}"',
+    "errored": '*Errored during {call_signature} with {exception_type} "{exception_msg}"',  # noqa: E501
 }
 
 # Miscellaneous constants
@@ -49,7 +56,9 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S %Z"
 
 # Make a dummy logging.LogRecord object, so that we can inspect what
 # attributes instances of that class have.
-dummy_log_record = logging.LogRecord("dummy_name", logging.INFO, "dummy_pathname", 1, "dummy_msg", {}, None)
+dummy_log_record = logging.LogRecord(
+    "dummy_name", logging.INFO, "dummy_pathname", 1, "dummy_msg", {}, None
+)
 LOG_RECORD_ATTRS = vars(dummy_log_record).keys()
 
 
@@ -128,11 +137,12 @@ class Loggo:
         - do_write: write logs to file
         - truncation: truncate value of log data fields to this length
         - msg_truncation: truncate value of log messages to this length
-        - trace_truncation: truncate value of log data fields "trace" and "traceback" to this length
+        - trace_truncation: truncate value of log data fields "trace" and "traceback"
+            to this length
         - private_data: key names that should be filtered out of logging
         - raise_logging_errors: should stdlib `log` call errors be suppressed or no?
-        - log_if_graylog_disabled: boolean value, should a warning log be made when failing to
-            connect to graylog
+        - log_if_graylog_disabled: boolean value, should a warning log be made when
+            failing to connect to graylog
         """
         self._stopped = False
         self._allow_errors = True
@@ -186,7 +196,9 @@ class Loggo:
         return time.strftime(DATE_FORMAT, time.localtime())
 
     @staticmethod
-    def _best_returned_none(returned: Optional[str], returned_none: Optional[str]) -> Optional[str]:
+    def _best_returned_none(
+        returned: Optional[str], returned_none: Optional[str]
+    ) -> Optional[str]:
         """Resolve the format for a log message, when a function returns None.
 
         If the user has their own msg format for 'returned' logs, but
@@ -227,7 +239,8 @@ class Loggo:
             # somehow, decorating classmethods as staticmethods is the only way
             # to make everything work properly. we should find out why, some day
             if isinstance(vars(cls)[name], (staticmethod, classmethod)):
-                # Make mypy ignore due to an open issue: https://github.com/python/mypy/issues/5530
+                # Make mypy ignore due to an open issue:
+                # https://github.com/python/mypy/issues/5530
                 deco = staticmethod(deco)  # type: ignore
             try:
                 setattr(cls, name, deco)
@@ -304,7 +317,8 @@ class Loggo:
             bound = self._params_to_dict(function, *args, **kwargs)
             if bound is None:
                 self.warning(
-                    "Failed getting function signature, or coupling arguments with signature's parameters",
+                    "Failed getting function signature, "
+                    "or coupling arguments with signature's parameters",
                     extra={"callable_name": getattr(function, "__qualname__", "unknown_callable")},
                 )
                 return function(*args, **kwargs)
@@ -365,7 +379,8 @@ class Loggo:
         signature = "{callable}({params})"
         param_str = ", ".join(f"{k}={v}" for k, v in param_strings.items())
         format_strings = Formatters(
-            callable=getattr(function, "__qualname__", "unknown_callable"), params=param_str
+            callable=getattr(function, "__qualname__", "unknown_callable"),
+            params=param_str,
         )
         format_strings["call_signature"] = signature.format(**format_strings)
         return format_strings
@@ -434,17 +449,24 @@ class Loggo:
         if str(type(response)) == "<class 'requests.models.Response'>":
             response = response.text
 
-        return "({})".format(self._force_string_and_truncate(response, truncate=None, use_repr=True))
+        return "({})".format(
+            self._force_string_and_truncate(response, truncate=None, use_repr=True)
+        )
 
     def _generate_log(
-        self, where: CallableEvent, returned: Any, formatters: Formatters, safe_log_data: Mapping[str, str]
+        self,
+        where: CallableEvent,
+        returned: Any,
+        formatters: Formatters,
+        safe_log_data: Mapping[str, str],
     ) -> None:
         """Generate message, level and log data for automated logs.
 
         - msg (str): the unformatted message
         - returned (ANY): what the decorated callable returned
         - formatters (dict): dict containing format strings needed for message
-        - safe_log_data (Mapping): A mapping of stringified, truncated, censored parameters
+        - safe_log_data (Mapping): A mapping of stringified, truncated, censored
+            parameters
         """
         # if the user turned off logs of this type, do nothing immediately
         msg = self._msg_forms[where]
@@ -497,7 +519,9 @@ class Loggo:
         """An overwritable method useful for adding custom log data."""
         return {}
 
-    def _add_graylog_handler(self, address: Optional[Tuple[str, int]], log_if_disabled: bool) -> None:
+    def _add_graylog_handler(
+        self, address: Optional[Tuple[str, int]], log_if_disabled: bool
+    ) -> None:
         if not graypy:
             if address:
                 raise ValueError("Misconfiguration: Graylog configured but graypy not installed")
@@ -511,7 +535,9 @@ class Loggo:
         handler = graypy.GELFUDPHandler(*address, debugging_fields=False)
         self._logger.addHandler(handler)
 
-    def _force_string_and_truncate(self, obj: Any, truncate: Optional[int], use_repr: bool = False) -> str:
+    def _force_string_and_truncate(
+        self, obj: Any, truncate: Optional[int], use_repr: bool = False
+    ) -> str:
         """Return stringified and truncated obj.
 
         If stringification fails, log a warning and return the string
@@ -521,7 +547,8 @@ class Loggo:
             obj = str(obj) if not use_repr else repr(obj)
         except Exception as exc:
             self.warning(
-                "Object could not be cast to string", extra={"exception_type": type(exc), "exception": exc}
+                "Object could not be cast to string",
+                extra={"exception_type": type(exc), "exception": exc},
             )
             return "<<Unstringable input>>"
         return self._truncate(obj, truncate)

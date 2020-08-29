@@ -1,27 +1,26 @@
 dist: bionic
 language: python
 python:
-  - '3.6'
-  - '3.7'
   - '3.8'
   - '3.9-dev'
 jobs:
   allow_failures:
     - python: '3.9-dev'
 install:
-  - pip install .[dev]
+  - pip install "poetry==1.0.10"
+  - poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 script:
-  # Static checks (only in Python 3.6 job)
+  # Static checks (only in Python 3.8 job)
   - |
-    if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then
+    if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then
       flake8 . &&
       mypy . &&
       isort --check-only -rc . &&
       black --check . &&
-      docformatter --recursive --check loggo/ tests/ setup.py
+      docformatter --recursive --check loggo/ tests/
     fi
   # Tests
   - pytest --cov --cov-fail-under=95
 after_success:
-  # Upload coverage (only in Python 3.6 job)
-  - if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then codecov; fi
+  # Upload coverage (only in Python 3.8 job)
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then pip install codecov && codecov; fi

@@ -204,7 +204,7 @@ class TestDecoration:
             expected_msg = "*Called DummyClass.add_and_maybe_subtract(a=15, b=10, c=5)"
             assert logged_msg == expected_msg
             (alert, logged_msg), extras = logger.call_args_list[-1]
-            expected_msg = "*Returned from DummyClass.add_and_maybe_subtract(a=15, b=10, c=5) with int (20)"
+            expected_msg = "*Returned from DummyClass.add_and_maybe_subtract(a=15, b=10, c=5) with int (20)"  # noqa: E501
             assert expected_msg == logged_msg
 
     def test_everything_1(self):
@@ -244,7 +244,7 @@ class TestDecoration:
             with pytest.raises(ValueError):
                 dummy.hopefully_only_errors(5)
             (alert, logged_msg), extras = logger.call_args
-            expected_msg = '*Errored during DummyClass.hopefully_only_errors(n=5) with ValueError "Bam!"'
+            expected_msg = '*Errored during DummyClass.hopefully_only_errors(n=5) with ValueError "Bam!"'  # noqa: E501
             assert expected_msg == logged_msg
 
     def test_error_deco(self):
@@ -291,8 +291,16 @@ class TestLog:
     def setup_method(self):
         self.logfile = "./logs/logs.txt"
         self.log_msg = "This is a message that can be used when the content does not matter."
-        self.log_data = {"This is": "log data", "that can be": "used when content does not matter"}
-        self.loggo = Loggo(do_print=True, do_write=True, logfile=self.logfile, log_if_graylog_disabled=False)
+        self.log_data = {
+            "This is": "log data",
+            "that can be": "used when content does not matter",
+        }
+        self.loggo = Loggo(
+            do_print=True,
+            do_write=True,
+            logfile=self.logfile,
+            log_if_graylog_disabled=False,
+        )
         self.log = self.loggo.log
 
     def test_protected_keys(self):
@@ -380,7 +388,9 @@ class TestLog:
             mock_log.assert_called_with(20, msg, extra=ANY)
             logger_was_passed = mock_log.call_args[1]["extra"][trace_key]
             truncation_suffix = "..."
-            done_by_hand = str(large_number)[: trace_truncation - len(truncation_suffix)] + truncation_suffix
+            done_by_hand = (
+                str(large_number)[: trace_truncation - len(truncation_suffix)] + truncation_suffix
+            )
             assert logger_was_passed == done_by_hand
 
     def test_fail_to_add_entry(self):

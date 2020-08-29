@@ -5,6 +5,8 @@ This log should always be updated when doing backwards incompatible changes, res
 
 *unreleased major*
 -----
+- Removed
+    - Python 3.6 and 3.7 support
 - Changed
     - `private_data` kwarg of `Loggo.__init__` no longer accepts `None` value.
 

@@ -20,7 +20,11 @@ nocalled: Mapping[str, Optional[str]] = {
     "errored": "Log string on exception",
 }
 
-no_return: Mapping[str, Optional[str]] = {"called": "called fine", "returned": None, "returned_none": None}
+no_return: Mapping[str, Optional[str]] = {
+    "called": "called fine",
+    "returned": None,
+    "returned_none": None,
+}
 
 custom_none_string = Loggo(log_if_graylog_disabled=False, **nocalled)
 

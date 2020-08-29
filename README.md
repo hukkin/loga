@@ -1,9 +1,8 @@
-[![Build Status](https://travis-ci.org/bitpanda-labs/loggo.svg?branch=master)](https://travis-ci.org/bitpanda-labs/loggo)
-[![codecov.io](https://codecov.io/gh/bitpanda-labs/loggo/branch/master/graph/badge.svg)](https://codecov.io/gh/bitpanda-labs/loggo)
+[![Build Status](https://travis-ci.org/hukkinj1/loggo.svg?branch=master)](https://travis-ci.org/hukkinj1/loggo)
+[![codecov.io](https://codecov.io/gh/hukkinj1/loggo/branch/master/graph/badge.svg)](https://codecov.io/gh/hukkinj1/loggo)
 [![PyPI version](https://badge.fury.io/py/loggo.svg)](https://badge.fury.io/py/loggo)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-# `@loggo`: automated logging for Python 3
+# `@loggo`: automated logging for Python
 
 <!--- Don't edit the version line below manually. Let bump2version do it for you. -->
 > Version 8.1.0
@@ -204,7 +203,7 @@ with loggo.pause(allow_errors=False):
 
 ### Style
 The style is [Black](https://github.com/psf/black), with the following exceptions and extra strictness:
-* Maximum line length is 110
+* Maximum line length is 99
 * The comment syntax for types should not be used unless ignoring with `# type: ignore`. That is, write this:
     ```python
     def hello() -> str:
@@ -226,7 +225,8 @@ Issues, feature requests and code contributions are welcomed. Follow these steps
 
 1. Install dependencies (you'll probably want to create a virtual environment, using your preferred method, first).
     ```bash
-    pip install -e .[dev]
+    pip install poetry
+    poetry install
     ```
 
 1. Install pre-commit hooks
@@ -236,7 +236,7 @@ Issues, feature requests and code contributions are welcomed. Follow these steps
 
 1. After making changes and having written tests, make sure tests pass:
     ```bash
-    python -m unittest
+    pytest
     ```
 
 1. Commit, push, and make a PR.
