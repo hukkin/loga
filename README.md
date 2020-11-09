@@ -5,9 +5,26 @@
 # `@loga`: automated logging for Python
 
 <!--- Don't edit the version line below manually. Let bump2version do it for you. -->
+
 > Version 1.0.0
 
 > You find Python's builtin `logging` module repetitive, tedious and ugly, and the logs you do write with it clash with your otherwise awesome style. `loga` is here to help: it automates the boring stuff, simplifies the tricky stuff, hooks up effortlessly to [graylog](https://www.graylog.org/), and keeps an eye out for privacy and security if you need it to.
+
+**Table of Contents**
+
+<!-- mdformat-toc start --slug=github --no-anchors --maxlevel=6 --minlevel=2 -->
+
+- [Install](<#install>)
+- [Setup](<#setup>)
+- [Usage](<#usage>)
+  - [Loga as decorator](<#loga-as-decorator>)
+  - [Custom messages](<#custom-messages>)
+  - [Logging without decorators](<#logging-without-decorators>)
+  - [Methods](<#methods>)
+  - [Context managers](<#context-managers>)
+- [Limitations](<#limitations>)
+
+<!-- mdformat-toc end -->
 
 ## Install
 
@@ -16,6 +33,7 @@ pip install loga
 ```
 
 To install with Graylog support, do:
+
 ```bash
 pip install loga[graylog]
 ```
@@ -135,23 +153,26 @@ def test():
 If you pass `None` for any of these keyword arguments, logs of that time will be completely suppressed. If you do not provide a value for `returned_none`, `loga` will use the value you provided for `returned`, or fall back to its own default.
 
 Notice, in the example above, you can include particular format strings in the log message. Currently supported are:
-* `call_signature`: the callable name and its arguments and keyword arguments
-* `callable`: the `__qualname__` of the decorated object
-* `params`: comma separated key value pairs for arguments passed
-* `log_level`: the log level associated with this log
-* `timestamp`: time at time of logging
-* `couplet`: `uuid.uuid1()` for the called and returned/errored pair
-* `number_of_params`: total `args + kwargs` as int
-* `decorated`: always `True`
+
+- `call_signature`: the callable name and its arguments and keyword arguments
+- `callable`: the `__qualname__` of the decorated object
+- `params`: comma separated key value pairs for arguments passed
+- `log_level`: the log level associated with this log
+- `timestamp`: time at time of logging
+- `couplet`: `uuid.uuid1()` for the called and returned/errored pair
+- `number_of_params`: total `args + kwargs` as int
+- `decorated`: always `True`
 
 The `errored` log additionally supports:
-* `exception_type`: `ValueError`, `AttributeError`, etc.
-* `exception_msg`: details about the thrown exception
-* `traceback`: exception traceback
+
+- `exception_type`: `ValueError`, `AttributeError`, etc.
+- `exception_msg`: details about the thrown exception
+- `traceback`: exception traceback
 
 And the `returned` and `returned_none` logs support:
-* `return_value`: the object returned by the callable
-* `return_type`: type of returned object
+
+- `return_value`: the object returned by the callable
+- `return_type`: type of returned object
 
 Adding more such strings is trivial; submit an issue if there is something else you need.
 
