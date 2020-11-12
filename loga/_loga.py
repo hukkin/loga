@@ -11,6 +11,7 @@ import pathlib
 import sys
 import time
 import traceback
+from types import MappingProxyType
 from typing import (
     AbstractSet,
     Any,
@@ -32,6 +33,8 @@ try:
 except ImportError:
     graypy = None
 
+
+EMPTY_MAP: MappingProxyType = MappingProxyType({})
 
 # Types for the typechecker
 CallableEvent = Literal["called", "errored", "returned", "returned_none"]
@@ -604,9 +607,7 @@ class Loga:
         """Overwritable method to clean or alter log messages."""
         return msg
 
-    def log(
-        self, level: int, msg: str, extra: Optional[Mapping] = None, safe: bool = False
-    ) -> None:
+    def log(self, level: int, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
         """Main logging method, called both in auto logs and manually by user.
 
         level: int, priority of log
@@ -618,10 +619,8 @@ class Loga:
         if self._stopped:
             return
 
-        if extra is None:
-            extra = {}
-        else:  # Make a copy of the user input to not mutate the original
-            extra = dict(extra)
+        # Make a copy of the user input to not mutate the original
+        extra = dict(extra)
 
         if not safe:
             extra = self.sanitise(extra, use_repr=False)

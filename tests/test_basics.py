@@ -453,11 +453,11 @@ class TestLog:
     def test_compat(self):
         test = "a string"
         with patch("loga.Loga.log") as logger:
-            loga.log(logging.INFO, test, None)
+            loga.log(logging.INFO, test, {})
         args = logger.call_args
         assert isinstance(args[0][0], int)
         assert args[0][1] == test
-        assert args[0][2] is None
+        assert args[0][2] == {}
         with patch("logging.Logger.log") as logger:
             loga.log(logging.INFO, test)
         (alert, msg), kwargs = logger.call_args
