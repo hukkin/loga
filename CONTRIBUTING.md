@@ -28,7 +28,7 @@ Issues, feature requests and code contributions are welcomed. Follow these steps
 
    ```bash
    pip install poetry
-   poetry install
+   poetry install --extras "graylog"
    ```
 
 1. Install pre-commit hooks

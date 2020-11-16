@@ -8,7 +8,7 @@ class TestWithoutGraypy:
 
         def mocked_import(name, *args):
             if name == "graypy":
-                raise ImportError()
+                raise ModuleNotFoundError
             return self.import_orig(name, *args)
 
         builtins.__import__ = mocked_import

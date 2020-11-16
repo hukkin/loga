@@ -30,7 +30,7 @@ import uuid
 # you don't need graylog installed
 try:
     import graypy
-except ImportError:
+except ModuleNotFoundError:
     graypy = None
 
 
