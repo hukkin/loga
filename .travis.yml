@@ -16,7 +16,7 @@ script:
     if [[ $TRAVIS_PYTHON_VERSION == '3.8' ]]; then
       flake8 . &&
       mypy . &&
-      isort --check-only -rc . &&
+      isort --check-only . &&
       black --check . &&
       docformatter --recursive --check loga/ tests/
     fi
