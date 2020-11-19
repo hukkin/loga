@@ -62,7 +62,7 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S %Z"
 dummy_log_record = logging.LogRecord(
     "dummy_name", logging.INFO, "dummy_pathname", 1, "dummy_msg", {}, None
 )
-LOG_RECORD_ATTRS = vars(dummy_log_record).keys()
+LOG_RECORD_ATTRS = frozenset(vars(dummy_log_record))
 
 
 class Formatters(TypedDict, total=False):
