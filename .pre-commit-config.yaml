@@ -4,6 +4,11 @@ repos:
   hooks:
   - id: check-yaml
   - id: check-toml
+- repo: https://github.com/pre-commit/pygrep-hooks
+  rev: 4f4c0a4cda27980be153cca2cb7710c9fec57ba3  # frozen: v1.7.0
+  hooks:
+  - id: python-use-type-annotations
+  - id: python-check-blanket-noqa
 - repo: https://github.com/timothycrosley/isort
   rev: 6bb47b7acc1554ecb59d2855e9110c447162f674  # frozen: 5.6.4
   hooks:
@@ -17,11 +22,10 @@ repos:
   hooks:
   - id: mypy
     args:
-    # Suppress errors resulting from no access to dependencies
-    - --ignore-missing-imports
-    - --no-warn-unused-ignores
     # Allow multiple scripts (no .py postfix in name) to be checked in a single mypy invocation
     - --scripts-are-modules
+    additional_dependencies:
+    - graypy
 - repo: https://gitlab.com/pycqa/flake8
   rev: bb6a530e28acab8d3551043b3e8709db8bcbac6b  # frozen: 3.8.4
   hooks:

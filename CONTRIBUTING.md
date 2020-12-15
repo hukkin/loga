@@ -1,23 +1,5 @@
 # Contributing
 
-## Style
-
-The style is [Black](https://github.com/psf/black), with the following exceptions and extra strictness:
-
-- Maximum line length is 99
-- The comment syntax for types should not be used unless ignoring with `# type: ignore`. That is, write this:
-  ```python
-  def hello() -> str:
-      return_value: str = "hello"
-      return return_value
-  ```
-  instead of writing this:
-  ```python
-  def hello():  # type: () -> str
-      return_value = "hello"  # type: str
-      return return_value
-  ```
-
 ## Making pull requests
 
 Issues, feature requests and code contributions are welcomed. Follow these steps to make a pull request:
