@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/hukkinj1/loga.svg?branch=master)](https://travis-ci.com/hukkinj1/loga)
+[![Build Status](https://github.com/hukkinj1/loga/workflows/Tests/badge.svg?branch=master)](https://github.com/hukkinj1/loga/actions?query=workflow%3ATests+branch%3Amaster+event%3Apush)
 [![codecov.io](https://codecov.io/gh/hukkinj1/loga/branch/master/graph/badge.svg)](https://codecov.io/gh/hukkinj1/loga)
-[![PyPI version](https://badge.fury.io/py/loga.svg)](https://badge.fury.io/py/loga)
+[![PyPI version](https://img.shields.io/pypi/v/loga)](https://pypi.org/project/loga)
 
 # `@loga`: automated logging for Python
 
@@ -8,7 +8,11 @@
 
 > Version 1.0.0
 
-> You find Python's builtin `logging` module repetitive, tedious and ugly, and the logs you do write with it clash with your otherwise awesome style. `loga` is here to help: it automates the boring stuff, simplifies the tricky stuff, hooks up effortlessly to [graylog](https://www.graylog.org/), and keeps an eye out for privacy and security if you need it to.
+> You find Python's builtin `logging` module repetitive, tedious and ugly,
+> and the logs you do write with it clash with your otherwise awesome style.
+> `loga` is here to help: it automates the boring stuff, simplifies the tricky stuff, hooks up effortlessly to
+> [graylog](https://www.graylog.org/),
+> and keeps an eye out for privacy and security if you need it to.
 
 **Table of Contents**
 
@@ -40,7 +44,10 @@ pip install loga[graylog]
 
 ## Setup
 
-To get started, import and instantiate the main class, ideally somewhere at the core of your project. If you have a module with multiple files, do the initial configuration in the main `__init__.py`, or in a file called `log.py`. so you can import the same, ready-set-up logger easily.
+To get started, import and instantiate the main class, ideally somewhere at the core of your project.
+If you have a module with multiple files, do the initial configuration in the main `__init__.py`,
+or in a file called `log.py`,
+so you can import the same, ready-set-up logger easily.
 
 For example, if your app was called `tester`, you could add the following to `tester/__init__.py`:
 
@@ -69,11 +76,19 @@ from tester import loga
 
 ### Loga as decorator
 
-You can use `@loga` as a decorator on any callable: a class, on its method, or on function. On classes, it will log every method; on methods and functions it will log the call signature, return and errors. The central idea behind `loga` is that you can simply decorate every class in your project, as well as any important standalone functions, and have comprehensive, standardised information about your project's internals without any extra labour.
+You can use `@loga` as a decorator on any callable: a class, on its method, or on function.
+On classes, it will log every method; on methods and functions it will log the call signature, return and errors.
+The central idea behind `loga` is that you can simply decorate every class in your project,
+as well as any important standalone functions,
+and have comprehensive, standardised information about your project's internals without any extra labour.
 
-If a method within a decorated class is called too often, or if you don't need to keep an eye on it, you can use `@loga.ignore` to ignore it. Also available is `@loga.errors`, which will only log exceptions, not calls and returns.
+If a method within a decorated class is called too often,
+or if you don't need to keep an eye on it,
+you can use `@loga.ignore` to ignore it.
+Also available is `@loga.errors`, which will only log exceptions, not calls and returns.
 
-For an example use-case, let's make a simple class that multiplies two numbers, but only if a password is supplied. We will ignore logging of the boring authentication system.
+For an example use-case, let's make a simple class that multiplies two numbers, but only if a password is supplied.
+We will ignore logging of the boring authentication system.
 
 ```python
 @loga
@@ -111,7 +126,8 @@ We'll get some nice text in the console:
 11.05 2018 17:14:54 *Returned from Multiplier.multiply(n=50, password='******') with int (2500)
 ```
 
-Notice that our private argument `password` was successfully obscured, even without us naming the argument when we called the method. If you used `do_write=True`, this log will also be in your specified log file, also with password obscured.
+Notice that our private argument `password` was successfully obscured, even without us naming the argument when we called the method.
+If you used `do_write=True`, this log will also be in your specified log file, also with password obscured.
 
 ```python
 result = mult.multiply(7, "password123")
@@ -130,11 +146,14 @@ Traceback (most recent call last):
 ValueError: Not authenticated!
 ```
 
-If you're using [graypy](https://github.com/severb/graypy/), you'll get a lot of extra goodness, such as key-value pairs for call signatures, timestamps, arguments, return values, exception information, and so on.
+If you're using [graypy](https://github.com/severb/graypy/),
+you'll get a lot of extra goodness,
+such as key-value pairs for call signatures, timestamps, arguments, return values, exception information, and so on.
 
 ### Custom messages
 
-When configuring `loga`, you can use your own message format for the auto-generated logs. There are four keys, one for each autolog type:
+When configuring `loga`, you can use your own message format for the auto-generated logs.
+There are four keys, one for each autolog type:
 
 ```python
 loga = Loga(
@@ -150,9 +169,11 @@ def test():
     pass
 ```
 
-If you pass `None` for any of these keyword arguments, logs of that time will be completely suppressed. If you do not provide a value for `returned_none`, `loga` will use the value you provided for `returned`, or fall back to its own default.
+If you pass `None` for any of these keyword arguments, logs of that time will be completely suppressed.
+If you do not provide a value for `returned_none`, `loga` will use the value you provided for `returned`, or fall back to its own default.
 
-Notice, in the example above, you can include particular format strings in the log message. Currently supported are:
+Notice, in the example above, you can include particular format strings in the log message.
+Currently supported are:
 
 - `call_signature`: the callable name and its arguments and keyword arguments
 - `callable`: the `__qualname__` of the decorated object
@@ -178,7 +199,10 @@ Adding more such strings is trivial; submit an issue if there is something else 
 
 ### Logging without decorators
 
-For logging manually, `loga` provides methods similar to the logging functions of the `logging` standard library: `loga.log`, `loga.debug`, `loga.info`, `loga.warning`, `loga.error`, and `loga.critical`. The methods use the configuration that has already been defined. The main method `loga.log` takes three parameters:
+For logging manually, `loga` provides methods similar to the logging functions of the `logging` standard library:
+`loga.log`, `loga.debug`, `loga.info`, `loga.warning`, `loga.error`, and `loga.critical`.
+The methods use the configuration that has already been defined.
+The main method `loga.log` takes three parameters:
 
 ```python
 level = 50
@@ -189,7 +213,8 @@ loga.log(level, msg, extra)
 # extra_data in log file if `do_print` setting is True
 ```
 
-Methods `loga.debug`, `loga.info`, `loga.warning`, `loga.error` and `loga.critical` are convenience methods for setting the log level. For instance,
+Methods `loga.debug`, `loga.info`, `loga.warning`, `loga.error` and `loga.critical` are convenience methods for setting the log level.
+For instance,
 
 ```python
 loga.warning("A message", dict(some="data"))
@@ -203,15 +228,18 @@ loga.log(logging.WARNING, "A message", dict(some="data"))
 
 where `logging.WARNING` is an integer constant imported from the standard library.
 
-The advantage of using `loga` for these kinds of logs is that `loga` will make the extra data more readable and truncate very large strings. More importantly, you also still get whatever extras you've configured, like obfuscation of private data, or writing to console/file.
+The advantage of using `loga` for these kinds of logs is that `loga` will make the extra data more readable and truncate very large strings.
+More importantly, you also still get whatever extras you've configured, like obfuscation of private data, or writing to console/file.
 
 ### Methods
 
-You can also start and stop logging with `loga.start()` and `loga.stop()`, at any point in your code, though by default, error logs will still get through. If you want to suppress errors too, you can pass in `allow_errors=False`.
+You can also start and stop logging with `loga.start()` and `loga.stop()`, at any point in your code, though by default, error logs will still get through.
+If you want to suppress errors too, you can pass in `allow_errors=False`.
 
 ### Context managers
 
-You can suppress logs using a context manager. Errors are allowed here by default too:
+You can suppress logs using a context manager.
+Errors are allowed here by default too:
 
 ```python
 with loga.pause(allow_errors=False):
@@ -220,4 +248,7 @@ with loga.pause(allow_errors=False):
 
 ## Limitations
 
-`loga` uses Python's standard library (`logging`) to generate logs. There are some gotchas when using it: for instance, in terms of the extra data that can be passed in, key names for this extra data cannot clash with some internal names used within the `logging` module (`message`, `args`, etc.). To get around this, you'll get a warning that your data contains a bad key name, and it will be changed (i.e. from `message` to `protected_message`).
+`loga` uses Python's standard library (`logging`) to generate logs.
+There are some gotchas when using it:
+for instance, in terms of the extra data that can be passed in, key names for this extra data cannot clash with some internal names used within the `logging` module (`message`, `args`, etc.).
+To get around this, you'll get a warning that your data contains a bad key name, and it will be changed (i.e. from `message` to `protected_message`).
