@@ -505,27 +505,31 @@ class TestLog:
     def test_debug(self):
         with patch("loga.Loga.log") as logger:
             self.loga.debug(self.log_msg, self.log_data)
-            logger.assert_called_with(logging.DEBUG, self.log_msg, self.log_data)
+            logger.assert_called_with(logging.DEBUG, self.log_msg, extra=self.log_data, safe=False)
 
     def test_info(self):
         with patch("loga.Loga.log") as logger:
             self.loga.info(self.log_msg, self.log_data)
-            logger.assert_called_with(logging.INFO, self.log_msg, self.log_data)
+            logger.assert_called_with(logging.INFO, self.log_msg, extra=self.log_data, safe=False)
 
     def test_warning(self):
         with patch("loga.Loga.log") as logger:
             self.loga.warning(self.log_msg, self.log_data)
-            logger.assert_called_with(logging.WARNING, self.log_msg, self.log_data)
+            logger.assert_called_with(
+                logging.WARNING, self.log_msg, extra=self.log_data, safe=False
+            )
 
     def test_error(self):
         with patch("loga.Loga.log") as logger:
             self.loga.error(self.log_msg, self.log_data)
-            logger.assert_called_with(logging.ERROR, self.log_msg, self.log_data)
+            logger.assert_called_with(logging.ERROR, self.log_msg, extra=self.log_data, safe=False)
 
     def test_critical(self):
         with patch("loga.Loga.log") as logger:
             self.loga.critical(self.log_msg, self.log_data)
-            logger.assert_called_with(logging.CRITICAL, self.log_msg, self.log_data)
+            logger.assert_called_with(
+                logging.CRITICAL, self.log_msg, extra=self.log_data, safe=False
+            )
 
     def test_listen_to(self):
         sub_loga_facility = "a sub logger"

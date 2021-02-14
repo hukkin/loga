@@ -639,17 +639,17 @@ class Loga:
             if self._raise_logging_errors:
                 raise
 
-    def debug(self, *args: Any, **kwargs: Any) -> None:
-        return self.log(logging.DEBUG, *args, **kwargs)
+    def debug(self, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
+        return self.log(logging.DEBUG, msg, extra=extra, safe=safe)
 
-    def info(self, *args: Any, **kwargs: Any) -> None:
-        return self.log(logging.INFO, *args, **kwargs)
+    def info(self, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
+        return self.log(logging.INFO, msg, extra=extra, safe=safe)
 
-    def warning(self, *args: Any, **kwargs: Any) -> None:
-        return self.log(logging.WARNING, *args, **kwargs)
+    def warning(self, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
+        return self.log(logging.WARNING, msg, extra=extra, safe=safe)
 
-    def error(self, *args: Any, **kwargs: Any) -> None:
-        return self.log(logging.ERROR, *args, **kwargs)
+    def error(self, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
+        return self.log(logging.ERROR, msg, extra=extra, safe=safe)
 
-    def critical(self, *args: Any, **kwargs: Any) -> None:
-        return self.log(logging.CRITICAL, *args, **kwargs)
+    def critical(self, msg: str, extra: Mapping = EMPTY_MAP, safe: bool = False) -> None:
+        return self.log(logging.CRITICAL, msg, extra=extra, safe=safe)
