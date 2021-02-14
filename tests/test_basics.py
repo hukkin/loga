@@ -328,10 +328,16 @@ class TestLog:
 
     def test_write_to_file(self):
         """Check that we can write logs to file."""
-        expected_logfile = os.path.abspath(os.path.expanduser(self.logfile))
         open_ = mock_open()
         with patch("builtins.open", open_):
-            self.log(logging.INFO, "An entry in our log")
+            loga = Loga(
+                do_write=True,
+                logfile=self.logfile,
+                log_if_graylog_disabled=False,
+            )
+            loga.log(logging.INFO, "An entry in our log")
+
+        expected_logfile = os.path.abspath(os.path.expanduser(self.logfile))
         if sys.version_info < (3, 9):
             expected_open_call = call(expected_logfile, "a", encoding=None)
         else:
