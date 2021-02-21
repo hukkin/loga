@@ -2,6 +2,9 @@
 @loga: automated logging for Python
 """
 
+from __future__ import annotations
+
+from collections.abc import Callable, Generator, Mapping, Set
 from contextlib import contextmanager
 from functools import wraps
 import inspect
@@ -12,19 +15,7 @@ import sys
 import time
 import traceback
 from types import MappingProxyType
-from typing import (
-    AbstractSet,
-    Any,
-    Callable,
-    Dict,
-    Generator,
-    Literal,
-    Mapping,
-    Optional,
-    Tuple,
-    TypedDict,
-    TypeVar,
-)
+from typing import Any, Literal, TypedDict, TypeVar
 import uuid
 
 # you don't need graylog installed
@@ -113,12 +104,12 @@ class Loga:
     def __init__(
         self,
         *,  # Reject positional arguments
-        called: Optional[str] = DEFAULT_FORMS["called"],
-        returned: Optional[str] = DEFAULT_FORMS["returned"],
-        returned_none: Optional[str] = DEFAULT_FORMS["returned_none"],
-        errored: Optional[str] = DEFAULT_FORMS["errored"],
+        called: str | None = DEFAULT_FORMS["called"],
+        returned: str | None = DEFAULT_FORMS["returned"],
+        returned_none: str | None = DEFAULT_FORMS["returned_none"],
+        errored: str | None = DEFAULT_FORMS["errored"],
         facility: str = "loga",
-        graylog_address: Optional[Tuple[str, int]] = None,
+        graylog_address: tuple[str, int] | None = None,
         do_print: bool = False,
         do_write: bool = False,
         truncation: int = 7500,
@@ -126,7 +117,7 @@ class Loga:
         trace_truncation: int = 15000,
         raise_logging_errors: bool = True,
         logfile: str = "./logs/logs.txt",
-        private_data: AbstractSet[str] = frozenset(),
+        private_data: Set[str] = frozenset(),
         log_if_graylog_disabled: bool = True,
     ) -> None:
         """Initializes a Loga object.
@@ -149,7 +140,7 @@ class Loga:
         """
         self._stopped = False
         self._allow_errors = True
-        self._msg_forms: Dict[CallableEvent, Optional[str]] = {
+        self._msg_forms: dict[CallableEvent, str | None] = {
             "called": called,
             "returned": returned,
             "returned_none": self._best_returned_none(returned, returned_none),
@@ -199,9 +190,7 @@ class Loga:
         return time.strftime(DATE_FORMAT, time.localtime())
 
     @staticmethod
-    def _best_returned_none(
-        returned: Optional[str], returned_none: Optional[str]
-    ) -> Optional[str]:
+    def _best_returned_none(returned: str | None, returned_none: str | None) -> str | None:
         """Resolve the format for a log message, when a function returns None.
 
         If the user has their own msg format for 'returned' logs, but
@@ -221,7 +210,7 @@ class Loga:
         return returned
 
     @staticmethod
-    def _can_decorate(candidate: Callable, name: Optional[str] = None) -> bool:
+    def _can_decorate(candidate: Callable, name: str | None = None) -> bool:
         """Decide if we can decorate a given callable.
 
         Don't decorate python magic methods.
@@ -359,7 +348,7 @@ class Loga:
 
         return full_decoration
 
-    def _string_params(self, non_private_params: Mapping, use_repr: bool = True) -> Dict[str, str]:
+    def _string_params(self, non_private_params: Mapping, use_repr: bool = True) -> dict[str, str]:
         """Turn every entry in log_data into truncated strings."""
         params = {}
         for key, val in non_private_params.items():
@@ -408,7 +397,7 @@ class Loga:
         other_logger.addHandler(LogaHandler())
 
     @staticmethod
-    def _params_to_dict(function: Callable, *args: Any, **kwargs: Any) -> Optional[Mapping]:
+    def _params_to_dict(function: Callable, *args: Any, **kwargs: Any) -> Mapping | None:
         """Turn args and kwargs into an OrderedDict of {param_name: value}.
 
         Returns None if getting the signature, or binding arguments to
@@ -518,13 +507,11 @@ class Loga:
             # restore old stopped state
             self._stopped = original_state
 
-    def add_custom_log_data(self) -> Dict[str, str]:
+    def add_custom_log_data(self) -> dict[str, str]:
         """An overwritable method useful for adding custom log data."""
         return {}
 
-    def _add_graylog_handler(
-        self, address: Optional[Tuple[str, int]], log_if_disabled: bool
-    ) -> None:
+    def _add_graylog_handler(self, address: tuple[str, int] | None, log_if_disabled: bool) -> None:
         if not graypy:
             if address:
                 raise ValueError("Misconfiguration: Graylog configured but graypy not installed")
@@ -539,7 +526,7 @@ class Loga:
         self._logger.addHandler(handler)
 
     def _force_string_and_truncate(
-        self, obj: Any, truncate: Optional[int], use_repr: bool = False
+        self, obj: Any, truncate: int | None, use_repr: bool = False
     ) -> str:
         """Return stringified and truncated obj.
 
@@ -557,7 +544,7 @@ class Loga:
         return self._truncate(obj, truncate)
 
     @staticmethod
-    def _truncate(string_to_truncate: str, max_len: Optional[int]) -> str:
+    def _truncate(string_to_truncate: str, max_len: int | None) -> str:
         """Return a truncated string.
 
         Returns a truncated string of length `max_len` or less. If
@@ -576,7 +563,7 @@ class Loga:
         return string_to_truncate[: max_len - len(truncation_suffix)] + truncation_suffix
 
     @staticmethod
-    def _rename_protected_keys(log_data: Mapping) -> Dict:
+    def _rename_protected_keys(log_data: Mapping) -> dict:
         """Rename log data keys with valid names.
 
         Some names cannot go into logger. Rename the invalid keys with a
@@ -592,7 +579,7 @@ class Loga:
             out[key] = value
         return out
 
-    def sanitise(self, unsafe_dict: Mapping, use_repr: bool = True) -> Dict[str, str]:
+    def sanitise(self, unsafe_dict: Mapping, use_repr: bool = True) -> dict[str, str]:
         """Ensure that log data is safe to log.
 
         - No private keys
