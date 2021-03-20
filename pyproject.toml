@@ -37,6 +37,9 @@ graylog = ["graypy"]
 pytest = "*"
 pytest-randomly = "*"
 pytest-cov = "*"
+# This is a dependency of pytest-cov that we list explicitly because we
+# want the "toml" extra for pyproject.toml support.
+coverage = { version = "*", extras = ["toml"] }
 
 # Tools
 pre-commit = "*"
@@ -65,3 +68,7 @@ line_length = 99
 [tool.pytest.ini_options]
 addopts = "--strict-markers --strict-config"
 xfail_strict = true
+
+
+[tool.coverage.run]
+omit = ["tests/*", "*/site-packages/*", "venv/*"]
