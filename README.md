@@ -18,15 +18,15 @@
 
 <!-- mdformat-toc start --slug=github --no-anchors --maxlevel=6 --minlevel=2 -->
 
-- [Install](<#install>)
-- [Setup](<#setup>)
-- [Usage](<#usage>)
-  - [Loga as decorator](<#loga-as-decorator>)
-  - [Custom messages](<#custom-messages>)
-  - [Logging without decorators](<#logging-without-decorators>)
-  - [Methods](<#methods>)
-  - [Context managers](<#context-managers>)
-- [Limitations](<#limitations>)
+- [Install](#install)
+- [Setup](#setup)
+- [Usage](#usage)
+  - [Loga as decorator](#loga-as-decorator)
+  - [Custom messages](#custom-messages)
+  - [Logging without decorators](#logging-without-decorators)
+  - [Methods](#methods)
+  - [Context managers](#context-managers)
+- [Limitations](#limitations)
 
 <!-- mdformat-toc end -->
 

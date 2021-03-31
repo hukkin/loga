@@ -534,7 +534,7 @@ class Loga:
         '<<Unstringable input>>'
         """
         try:
-            obj = str(obj) if not use_repr else repr(obj)
+            obj = repr(obj) if use_repr else str(obj)
         except Exception as exc:
             self.warning(
                 "Object could not be cast to string",
