@@ -535,7 +535,7 @@ class TestLog:
         sub_loga_facility = "a sub logger"
         sub_loga = Loga(facility=sub_loga_facility)
         self.loga.listen_to(sub_loga_facility)
-        self.loga.log = Mock()  # type: ignore
+        self.loga.log = Mock()  # type: ignore[assignment]
         warn = "The parent logger should log this message after sublogger logs it"
         sub_loga.log(logging.WARNING, warn)
         self.loga.log.assert_called_with(logging.WARNING, warn, ANY)

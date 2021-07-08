@@ -233,7 +233,7 @@ class Loga:
             if isinstance(vars(cls)[name], (staticmethod, classmethod)):
                 # Make mypy ignore due to an open issue:
                 # https://github.com/python/mypy/issues/5530
-                deco = staticmethod(deco)  # type: ignore
+                deco = staticmethod(deco)  # type: ignore[assignment]
             try:
                 setattr(cls, name, deco)
             # AttributeError happens if we can't write, as with __dict__

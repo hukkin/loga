@@ -6,9 +6,9 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "loga"
 version = "1.0.0"  # DO NOT EDIT THIS LINE MANUALLY. LET bump2version UTILITY DO IT
-authors = ["hukkinj1 <hukkinj1@users.noreply.github.com>"]
+authors = ["hukkin <hukkin@users.noreply.github.com>"]
 description = "Automated logging for Python"
-repository = "https://github.com/hukkinj1/loga"
+repository = "https://github.com/hukkin/loga"
 readme = "README.md"
 license = "MIT"
 classifiers = [
@@ -23,7 +23,7 @@ packages = [
 include = ["loga/py.typed"]
 
 [tool.poetry.urls]
-"Changelog" = "https://github.com/hukkinj1/loga/blob/master/CHANGELOG.md"
+"Changelog" = "https://github.com/hukkin/loga/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -71,3 +71,30 @@ xfail_strict = true
 
 [tool.coverage.run]
 omit = ["tests/*", "*/site-packages/*", "venv/*"]
+
+
+[tool.mypy]
+show_error_codes = true
+warn_unreachable = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+# Disabling incremental mode is required for `warn_unused_configs = true` to work
+incremental = false
+check_untyped_defs = true
+disallow_untyped_defs = true
+strict_equality = true
+implicit_reexport = false
+no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = "pytest.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "graypy.*"
+ignore_missing_imports = true

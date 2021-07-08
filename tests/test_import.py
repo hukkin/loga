@@ -24,4 +24,4 @@ class TestWithoutGraypy:
 
         reload(loga._loga)
         loga.Loga()
-        assert loga._loga.graypy is None  # type: ignore
+        assert loga._loga.graypy is None  # type: ignore[attr-defined]

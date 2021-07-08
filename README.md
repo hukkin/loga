@@ -1,5 +1,5 @@
-[![Build Status](https://github.com/hukkinj1/loga/workflows/Tests/badge.svg?branch=master)](https://github.com/hukkinj1/loga/actions?query=workflow%3ATests+branch%3Amaster+event%3Apush)
-[![codecov.io](https://codecov.io/gh/hukkinj1/loga/branch/master/graph/badge.svg)](https://codecov.io/gh/hukkinj1/loga)
+[![Build Status](https://github.com/hukkin/loga/workflows/Tests/badge.svg?branch=master)](https://github.com/hukkin/loga/actions?query=workflow%3ATests+branch%3Amaster+event%3Apush)
+[![codecov.io](https://codecov.io/gh/hukkin/loga/branch/master/graph/badge.svg)](https://codecov.io/gh/hukkin/loga)
 [![PyPI version](https://img.shields.io/pypi/v/loga)](https://pypi.org/project/loga)
 
 # `@loga`: automated logging for Python
