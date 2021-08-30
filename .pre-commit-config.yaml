@@ -11,11 +11,11 @@ repos:
   - id: python-check-blanket-noqa
   - id: python-check-blanket-type-ignore
 - repo: https://github.com/PyCQA/isort
-  rev: 6e4281f018ff848226d8993596765b2285e1624f  # frozen: 5.9.2
+  rev: fd5ba70665a37ec301a1f714ed09336048b3be63  # frozen: 5.9.3
   hooks:
   - id: isort
 - repo: https://github.com/psf/black
-  rev: 93c10bf9ebccf8d7cc686b0b9579f2e5e41c5328  # frozen: 21.6b0
+  rev: a8b4665e7d6eb945c47820adb1a3f8b006adce0c  # frozen: 21.8b0
   hooks:
   - id: black
 - repo: https://github.com/pre-commit/mirrors-mypy
@@ -40,7 +40,7 @@ repos:
   hooks:
   - id: docformatter
 - repo: https://github.com/executablebooks/mdformat
-  rev: b9b885e183ca16670b6d4a5ef8058664395dec58  # frozen: 0.7.7
+  rev: a8c92e41c6d03dd9b131d3a330a65bc286f61ebc  # frozen: 0.7.9
   hooks:
   - id: mdformat
     additional_dependencies:
