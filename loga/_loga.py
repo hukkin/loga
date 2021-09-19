@@ -422,17 +422,19 @@ class Loga:
                 bound.pop("cls")
         return bound
 
-    def _obscure_private_keys(self, log_data: Any, dict_depth: int = 0) -> Any:
+    def _obscure_private_keys(self, log_data: Mapping, dict_depth: int = 0) -> Mapping:
         """Obscure any private values in a dictionary recursively."""
-        if not isinstance(log_data, dict) or dict_depth >= MAX_DICT_OBSCURATION_DEPTH:
+        if dict_depth >= MAX_DICT_OBSCURATION_DEPTH:
             return log_data
 
-        out = {}
+        out: dict[str, Any] = {}
         for key, value in log_data.items():
             if key in self._private_data:
                 out[key] = OBSCURED_STRING
-            else:
+            elif isinstance(value, dict):
                 out[key] = self._obscure_private_keys(value, dict_depth + 1)
+            else:
+                out[key] = value
         return out
 
     def _represent_return_value(self, response: Any) -> str:
