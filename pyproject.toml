@@ -36,14 +36,14 @@ graylog = ["graypy"]
 # Tests
 pytest = "*"
 pytest-randomly = "*"
-pytest-cov = "*"
-# This is a dependency of pytest-cov that we list explicitly because we
-# want the "toml" extra for pyproject.toml support.
-coverage = { version = "*", extras = ["toml"] }
+pytest-cov = ">=2.12.1"
 
 # Tools
 pre-commit = "*"
 bump2version = "*"
+
+[tool.poetry.build]
+generate-setup-file = false
 
 
 [tool.black]
