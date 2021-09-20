@@ -397,7 +397,7 @@ class Loga:
         other_logger.addHandler(LogaHandler())
 
     @staticmethod
-    def _params_to_dict(function: Callable, *args: Any, **kwargs: Any) -> Mapping | None:
+    def _params_to_dict(function: Callable, *args: Any, **kwargs: Any) -> Mapping[str, Any] | None:
         """Turn args and kwargs into an OrderedDict of {param_name: value}.
 
         Returns None if getting the signature, or binding arguments to
@@ -415,7 +415,7 @@ class Loga:
 
         bound = bound_obj.arguments
         if bound:
-            first = list(bound)[0]
+            first = next(iter(bound))
             if first == "self":
                 bound.pop("self")
             elif first == "cls":
@@ -443,9 +443,7 @@ class Loga:
         if str(type(response)) == "<class 'requests.models.Response'>":
             response = response.text
 
-        return "({})".format(
-            self._force_string_and_truncate(response, truncate=None, use_repr=True)
-        )
+        return "(" + self._force_string_and_truncate(response, truncate=None, use_repr=True) + ")"
 
     def _generate_log(
         self,
@@ -473,10 +471,6 @@ class Loga:
 
         # if state is stopped and not an error, quit
         if self._stopped and where != "errored":
-            return
-
-        # do not log loga, because why would you ever want that?
-        if "loga.loga" in formatters["call_signature"]:
             return
 
         # return value for log message
@@ -571,15 +565,10 @@ class Loga:
         Some names cannot go into logger. Rename the invalid keys with a
         prefix before logging.
         """
-        out = {}
         # Names that stdlib logger will not like. Based on [1]
         # [1]: https://github.com/python/cpython/blob/04c79d6088a22d467f04dbe438050c26de22fa85/Lib/logging/__init__.py#L1550  # noqa: E501
         protected = {"message", "asctime"} | LOG_RECORD_ATTRS
-        for key, value in log_data.items():
-            if key in protected:
-                key = "protected_" + key
-            out[key] = value
-        return out
+        return {"protected_" + k if k in protected else k: v for k, v in log_data.items()}
 
     def sanitise(self, unsafe_dict: Mapping, use_repr: bool = True) -> dict[str, str]:
         """Ensure that log data is safe to log.
