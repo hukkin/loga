@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: 38b88246ccc552bffaaf54259d064beeee434539  # frozen: v4.0.1
+  rev: 8fe62d14e0b4d7d845a7022c5c2c3ae41bdd3f26  # frozen: v4.1.0
   hooks:
   - id: check-yaml
   - id: check-toml
@@ -11,15 +11,15 @@ repos:
   - id: python-check-blanket-noqa
   - id: python-check-blanket-type-ignore
 - repo: https://github.com/PyCQA/isort
-  rev: fd5ba70665a37ec301a1f714ed09336048b3be63  # frozen: 5.9.3
+  rev: c5e8fa75dda5f764d20f66a215d71c21cfa198e1  # frozen: 5.10.1
   hooks:
   - id: isort
 - repo: https://github.com/psf/black
-  rev: 911470a610e47d9da5ea938b0887c3df62819b85  # frozen: 21.9b0
+  rev: fc0be6eb1e2a96091e6f64009ee5e9081bf8b6c6  # frozen: 22.1.0
   hooks:
   - id: black
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: 44afb68a9695d04030edc5cdc5a4fc4f17e4f9e2  # frozen: v0.910
+  rev: f6f816c65d285f8a4a15e0e9965b3dd66ecddd79  # frozen: v0.931
   hooks:
   - id: mypy
     args:
@@ -28,7 +28,7 @@ repos:
     additional_dependencies:
     - graypy
 - repo: https://github.com/PyCQA/flake8
-  rev: dcd740bc0ebaf2b3d43e59a0060d157c97de13f3  # frozen: 3.9.2
+  rev: cbeb4c9c4137cff1568659fcc48e8b85cddd0c8d  # frozen: 4.0.1
   hooks:
   - id: flake8
     additional_dependencies:
@@ -40,7 +40,7 @@ repos:
   hooks:
   - id: docformatter
 - repo: https://github.com/executablebooks/mdformat
-  rev: 427df9181bd4d8e65c1108b912ad47a81628f03b  # frozen: 0.7.10
+  rev: a5f167d00d7a1990e69ee02efacc15d6136ea1aa  # frozen: 0.7.13
   hooks:
   - id: mdformat
     additional_dependencies:
