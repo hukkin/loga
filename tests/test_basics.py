@@ -103,7 +103,7 @@ class DummyClass:
 
     @loga.ignore
     def hopefully_ignored(self, n):
-        return n ** n
+        return n**n
 
     @loga.errors
     def hopefully_only_errors(self, n):
@@ -236,7 +236,7 @@ class TestDecoration:
     def test_loga_ignore(self):
         with patch("logging.Logger.log") as logger:
             result = dummy.hopefully_ignored(5)
-            assert result == 5 ** 5
+            assert result == 5**5
             logger.assert_not_called()
 
     def test_loga_errors(self):

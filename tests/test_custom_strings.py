@@ -11,7 +11,7 @@ strings: Mapping[str, str] = {
     "errored": "Log string on exception",
 }
 
-custom_strings = Loga(log_if_graylog_disabled=False, **strings)
+custom_strings = Loga(log_if_graylog_disabled=False, **strings)  # type: ignore[arg-type]
 
 nocalled: Mapping[str, Optional[str]] = {
     "called": None,
@@ -26,9 +26,9 @@ no_return: Mapping[str, Optional[str]] = {
     "returned_none": None,
 }
 
-custom_none_string = Loga(log_if_graylog_disabled=False, **nocalled)
+custom_none_string = Loga(log_if_graylog_disabled=False, **nocalled)  # type: ignore[arg-type]
 
-custom_no_return = Loga(log_if_graylog_disabled=False, **no_return)
+custom_no_return = Loga(log_if_graylog_disabled=False, **no_return)  # type: ignore[arg-type]
 
 
 # custom message test data
