@@ -231,9 +231,7 @@ class Loga:
             # somehow, decorating classmethods as staticmethods is the only way
             # to make everything work properly. we should find out why, some day
             if isinstance(vars(cls)[name], (staticmethod, classmethod)):
-                # Make mypy ignore due to an open issue:
-                # https://github.com/python/mypy/issues/5530
-                deco = staticmethod(deco)  # type: ignore[assignment]
+                deco = staticmethod(deco)
             try:
                 setattr(cls, name, deco)
             # AttributeError happens if we can't write, as with __dict__
