@@ -13,9 +13,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11-dev']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12-dev']
         os: [ubuntu-latest, macos-latest, windows-latest]
-    continue-on-error: ${{ matrix.python-version == '3.11-dev' }}
+    continue-on-error: ${{ matrix.python-version == '3.12-dev' }}
 
     steps:
     - uses: actions/checkout@v3
@@ -27,13 +27,12 @@ jobs:
 
     - name: Installation (deps and package)
       run: |
-        pip install "poetry==1.1.11"
-        poetry config virtualenvs.create false
-        poetry install --extras "graylog" --no-interaction --no-ansi
+        pip install .[graylog]
+        pip install pytest pytest-randomly pytest-cov pre-commit
     - name: Linters
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8'
       run: |
-        pre-commit run -a
+        pre-commit run --all-files
     - name: Test with pytest
       run: |
         pytest --cov --cov-fail-under=95
