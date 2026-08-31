@@ -278,9 +278,7 @@ class Loga:
         return function
 
     def errors(self, class_or_func: CallableOrType) -> CallableOrType:
-        """
-        Decorator: only log errors within a given method
-        """
+        """Decorator: only log errors within a given method."""
         if isinstance(class_or_func, type):
             return self._decorate_all_methods(class_or_func, just_errors=True)
         return self._logme(class_or_func, just_errors=True)
