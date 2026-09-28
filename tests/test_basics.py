@@ -45,21 +45,21 @@ def aaa():
 @loga
 class AllMethodTypes:
     def __secret__(self):
-        """a method that should never be logged."""
+        """A method that should never be logged."""
         return True
 
     def public(self):
-        """normal method."""
+        """Normal method."""
         return True
 
     @classmethod
     def cl(cls):
-        """class method."""
+        """Class method."""
         return True
 
     @staticmethod
     def st():
-        """static method."""
+        """Static method."""
         return True
 
     @loga
@@ -452,7 +452,7 @@ class TestLog:
             logger.assert_called_once()
 
     def test_see_below(self):
-        """legacy test, deletable if it causes problems later."""
+        """Legacy test, deletable if it causes problems later."""
         with patch("logging.Logger.log") as logger:
             loga.log(50, "test")
             (alert, msg), kwargs = logger.call_args
