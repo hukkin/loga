@@ -8,21 +8,21 @@ loga = Loga(log_if_graylog_disabled=False)
 @loga
 class AllMethodTypes:
     def __secret__(self):
-        """a method that should never be logged."""
+        """A method that should never be logged."""
         return True
 
     def public(self):
-        """normal method."""
+        """Normal method."""
         return True
 
     @classmethod
     def cl(cls):
-        """class method."""
+        """Class method."""
         return True
 
     @staticmethod
     def st():
-        """static method."""
+        """Static method."""
         return True
 
     @loga
